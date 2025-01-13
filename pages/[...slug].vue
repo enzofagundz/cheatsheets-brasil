@@ -34,7 +34,7 @@ main li {
 }
 
 main li strong {
-  @apply text-green-400
+  @apply text-primary
 }
 
 main li a {
