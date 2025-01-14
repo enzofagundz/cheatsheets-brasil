@@ -38,7 +38,7 @@ main p {
 }
 
 main pre {
-  @apply bg-base-100 rounded p-8 my-2 whitespace-pre-wrap
+  @apply bg-base-200 rounded p-8 my-2 whitespace-pre-wrap
 }
 
 main li {
