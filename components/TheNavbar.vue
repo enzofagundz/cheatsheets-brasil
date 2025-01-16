@@ -5,8 +5,12 @@
         </div>
         <div class="flex-none">
             <div class="form-control">
-                <input type="text" placeholder="Pesquise por um CheatSheet" class="input input-bordered w-24 md:w-auto"
-                    onclick="search_modal.showModal()" readonly />
+                <label class="input input-bordered flex items-center gap-2 w-24 md:w-auto">
+                    <input type="text" class="grow" placeholder="Pesquise por um CheatSheet"
+                        onclick="search_modal.showModal()" readonly />
+                    <kbd class="kbd kbd-sm">⌘</kbd>
+                    <kbd class="kbd kbd-sm">K</kbd>
+                </label>
             </div>
         </div>
     </div>
@@ -18,7 +22,7 @@
             </form>
             <h3 class="text-lg font-bold mb-4">Pesquisar CheatSheet</h3>
             <input type="text" placeholder="Digite para buscar..." class="input input-bordered w-full mb-4"
-                v-model="input" />
+                v-model="input" ref="searchInput" />
             <div>
                 <ul v-if="results.length">
                     <li v-for="result in results" :key="result.item" class="py-1">
@@ -49,6 +53,7 @@ const input = ref('')
 const { results } = useFuse(input, data)
 
 const searchModal = ref<HTMLDialogElement | null>(null)
+const searchInput = ref<HTMLDialogElement | null>(null)
 
 function formatTitle(title: string): string {
     return title.toLowerCase().replace(/\s+/g, '-')
@@ -60,13 +65,31 @@ function closeModal() {
     searchModal.value?.close()
 }
 
+function openModal() {
+    searchModal.value?.showModal()
+
+    nextTick(() => {
+        searchInput.value?.focus()
+    })
+}
+
+function handleShortcut(event: KeyboardEvent) {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        openModal()
+    }
+}
+
 onMounted(() => {
+    window.addEventListener('keydown', handleShortcut)
+
     router.afterEach(() => {
         closeModal()
     })
 })
 
 onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleShortcut)
     router.afterEach(() => { })
 })
 </script>
